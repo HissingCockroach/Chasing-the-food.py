@@ -1,3 +1,5 @@
+#Anyone is welcome to add on to this!
+
 import os
 import sys
 import pygame
@@ -29,7 +31,7 @@ BROWN2 = (218,165,32)
 
 pygame.init()
 DISPLAYSURF = pygame.display.set_mode((900,700),0,32)
-pygame.display.set_caption('Freeroam')
+pygame.display.set_caption('Chasing the food')
 clock = pygame.time.Clock()
 
 level = 2
