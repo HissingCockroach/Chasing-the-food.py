@@ -1,36 +1,119 @@
-*.py[cod]
+import os
+import sys
+import pygame
 
-# C extensions
-*.so
 
-# Packages
-*.egg
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-.installed.cfg
-lib
-lib64
-__pycache__
+def image_from_url(url):
+    try:
+        from urllib2 import urlopen
+        from cStringIO import StringIO as inout
+    except ImportError:
+        from urllib.request import urlopen
+        from io import BytesIO as inout
+    myurl = urlopen(url)
+    return inout(myurl.read())
 
-# Installer logs
-pip-log.txt
 
-# Unit test / coverage reports
-.coverage
-.tox
-nosetests.xml
+BUG_URL = ('http://i1315.photobucket.com/albums/t600/11roadkills/'
+           '9705abeb-8eab-4379-afe2-b8355bcd6b4f_zps86fb3a66.jpg?t=1382655213')
+LOGO_URL = ('http://i1315.photobucket.com/albums/t600/11roadkills/'
+            'pic_zps4fceb2fb.png')
 
-# Translations
-*.mo
 
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
+WHITE = (255,255,255)
+BLACK = (0,0,0)
+RED = (255,0,0)
+YELLOW = (255,255,0)
+BROWN = (139,69,19)
+BROWN2 = (218,165,32)
+
+pygame.init()
+DISPLAYSURF = pygame.display.set_mode((900,700),0,32)
+pygame.display.set_caption('Freeroam')
+clock = pygame.time.Clock()
+
+level = 2
+bug_image = pygame.image.load(image_from_url(BUG_URL))
+logo = pygame.image.load(image_from_url(LOGO_URL))
+myfont = pygame.font.SysFont("Lucida Console", 30)
+myfont2 = pygame.font.SysFont("Lucida Console", 100)
+label = myfont.render("Press P to play", 1 , BLACK)
+label2 = myfont2.render("GAME OVER", 1, RED)
+
+bug_rect = bug_image.get_rect(topleft=(723,298))
+
+l = False
+p = False
+while True:
+    DISPLAYSURF.fill(WHITE)
+    key = pygame.key.get_pressed()
+    if key[pygame.K_p]:
+        p = True
+        l = True
+    if l == True and key[pygame.K_UP]:
+        bug_rect.y -= level
+    if l == True and key[pygame.K_DOWN]:
+        bug_rect.y += level
+
+    DISPLAYSURF.blit(bug_image, bug_rect)
+
+    if p == False:
+        DISPLAYSURF.fill(RED)
+        DISPLAYSURF.blit(logo, (100,100))
+        DISPLAYSURF.blit(label, (100,100))
+
+    print bug_rect.x
+    print bug_rect.y
+    os.system('cls')
+
+    if l == True:
+        bug_rect.x -= level
+
+    if bug_rect.x >= 733:
+        bug_rect.x = 732
+    if bug_rect.x <= -25 or bug_rect.y <= -30:
+        l = False
+        DISPLAYSURF.blit(label2, (200,350))
+
+
+    if bug_rect.y >= 595:
+        l = False
+        DISPLAYSURF.blit(label2, (200,350))
+
+    if not level%2==0:
+        pygame.draw.circle(DISPLAYSURF, BROWN2, (1, 1), 170, 170)
+        pygame.draw.circle(DISPLAYSURF, BROWN, (10,100), 10,10)
+        pygame.draw.circle(DISPLAYSURF, BROWN, (100,10), 10,10)
+        pygame.draw.circle(DISPLAYSURF, BROWN, (20,50), 10,10)
+        pygame.draw.circle(DISPLAYSURF, BROWN, (150,50), 10,10)
+        pygame.draw.circle(DISPLAYSURF, BROWN, (50,150), 10,10)
+        pygame.draw.circle(DISPLAYSURF, BROWN, (80,100), 10,10)
+        if bug_rect.x <= 91 and bug_rect.y <= 92:
+            level += 1
+            bug_rect.topleft = (723,298)
+
+    if level%2==0:
+        pygame.draw.circle(DISPLAYSURF, BROWN2, (1, 700), 170, 170)
+        pygame.draw.circle(DISPLAYSURF, BROWN, (10,650), 10,10)
+        pygame.draw.circle(DISPLAYSURF, BROWN, (100,700), 10,10)
+        pygame.draw.circle(DISPLAYSURF, BROWN, (20,670), 10,10)
+        pygame.draw.circle(DISPLAYSURF, BROWN, (150,660), 10,10)
+        pygame.draw.circle(DISPLAYSURF, BROWN, (50,610), 10,10)
+        pygame.draw.circle(DISPLAYSURF, BROWN, (80,601), 10,10)
+        if bug_rect.x <= 141 and bug_rect.y >= 476:
+            level += 1
+            bug_rect.topleft = (723, 298)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    pygame.display.update()
+    clock.tick(60)
+
+    
+        
+
+
+
